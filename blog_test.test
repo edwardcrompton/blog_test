@@ -1,0 +1,68 @@
+<?php
+
+class BlogBaseMigrationTestCase extends MigrateDataTestCase {
+  /**
+   * Defines the metadata required by the Drupal test interface
+   *
+   */
+  static public function getInfo() {
+    return array(
+      'name' => 'Blog migration tests',
+      'description' => 'Web tests for testing custom blog migrate code',
+      'group' => 'Migrate',
+    );
+  }
+  
+  /**
+   * Gets called automatically by the simpletest module
+   *
+   * This function can be called anything as long as it starts with lowercase
+   * 'test'
+   */
+  public function testBlog() {
+    // Add the name of a destination field we'd like to test and a method we'd
+    // like to use to test it.
+    $this->addFieldTest('title')
+      // TODO: At the moment this has to be a method on this class. We'd like to
+      // call a function from anywhere.
+      ->callbacks(array('plainTextComparison'));
+    $this->addFieldTest('published', 'date')
+      ->callbacks(array('dateComparison'));
+    
+    return $this->executeTests();
+  }
+  
+  /**
+   * Tests a source value against a destination value
+   *
+   * @param $source
+   *   The source value for comparison
+   * @param $destination
+   *   The destination value for comparison
+   *
+   * @return TRUE if the test passed or FALSE if the test failed.
+   */
+  public function plainTextComparison($source, $destination) {
+    if (htmlspecialchars(trim($source)) == $destination) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+  
+  /**
+   * Tests a source value against a destination value
+   *
+   * @param $source
+   *   The source value for comparison
+   * @param $destination
+   *   The destination value for comparison
+   *
+   * @return TRUE if the test passed or FALSE if the test failed.
+   */
+  public function dateComparison($source, $destination) {
+    if ($destination == date("d-m-Y", strtotime($source))) {
+      return TRUE;  
+    }
+    return FALSE;
+  }
+}
