@@ -26,9 +26,8 @@ class BlogBaseMigrationTestCase extends MigrateDataTestCase {
       // TODO: At the moment this has to be a method on this class. We'd like to
       // call a function from anywhere.
       ->callbacks(array('plainTextComparison'));
-    $this->addFieldTest('published', 'date')
-      ->callbacks(array('dateComparison'));
-    
+    //$this->addFieldTest('published', 'date')
+    //  ->callbacks(array('dateComparison'));
     return $this->executeTests();
   }
   
