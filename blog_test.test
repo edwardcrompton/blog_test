@@ -1,6 +1,6 @@
 <?php
 
-class BlogBaseMigrationTestCase extends MigrateDataTestCase {
+class LinksMigrationTestCase extends MigrateDataTestCase {
   /**
    * Defines the metadata required by the Drupal test interface
    *
@@ -22,12 +22,13 @@ class BlogBaseMigrationTestCase extends MigrateDataTestCase {
   public function testBlog() {
     // Add the name of a destination field we'd like to test and a method we'd
     // like to use to test it.
-    $this->addFieldTest('title')
+    //$this->addFieldTest('title')
       // TODO: At the moment this has to be a method on this class. We'd like to
       // call a function from anywhere.
-      ->callbacks(array('plainTextComparison'));
-    //$this->addFieldTest('published', 'date')
-    //  ->callbacks(array('dateComparison'));
+      //->callbacks(array('plainTextComparison'));
+    $this->addFieldTest('body', 'url')
+      ->callbacks(array('urlFormat'));
+    
     return $this->executeTests();
   }
   
@@ -58,10 +59,10 @@ class BlogBaseMigrationTestCase extends MigrateDataTestCase {
    *
    * @return TRUE if the test passed or FALSE if the test failed.
    */
-  public function dateComparison($source, $destination) {
-    if ($destination == date("d-m-Y", strtotime($source))) {
-      return TRUE;  
-    }
+  public function urlFormat($source, $destination) {
+    if(filter_var($destination[LANGUAGE_NONE][0]['value'], FILTER_VALIDATE_URL)) {
+      return TRUE;
+    } 
     return FALSE;
   }
 }
